@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
@@ -11,8 +10,18 @@ php:
 node_js:
   - "stable"
 
+services:
+  - memcached
+  - mongodb
+
+addons:
+  hosts:
+    - dev.kohana.local
+    - test.kohana.local
+
 before_install:
-  - "git submodule update --init --recursive"
+  # Looks like git submodule init and submodule update installs all
+  # - "git submodule update --init --recursive"
   # Install Ruby
   - sudo apt-get update -qq
   - sudo apt-get install -qq ruby-full
@@ -28,10 +37,11 @@ before_script:
   # - grunt build
 
 script:
+  - ./vendor/bin/phing test
   # Standard build script
-  - if [[ $TRAVIS_PHP_VERSION != "hhvm" ]] ; then vendor/bin/phing test; fi
+  # - if [[ $TRAVIS_PHP_VERSION != "hhvm" ]] ; then vendor/bin/phing test; fi
   # HHVM script (phing not currently supported on hhvm pending http://www.phing.info/trac/ticket/1086)
-  - if [[ $TRAVIS_PHP_VERSION == "hhvm" ]] ; then ./vendor/bin/phpunit --bootstrap=modules/unittest/bootstrap_all_modules.php modules/unittest/tests.php ; fi
+  # - if [[ $TRAVIS_PHP_VERSION == "hhvm" ]] ; then ./vendor/bin/phpunit --bootstrap=modules/unittest/bootstrap_all_modules.php modules/unittest/tests.php ; fi
 
 # No notifications for now
 # notifications:
