@@ -1,5 +1,4 @@
-[![Travis Status][trav_img]][trav_site]
-[![NPM Package][npm_img]][npm_site]
+[![Build Status](https://travis-ci.org/driutheman/kohana.svg)](https://travis-ci.org/driutheman/kohana)
 
 # Kohana PHP Framework
 

@@ -7,13 +7,25 @@ php:
   - 5.6
   - hhvm
 
+# So all assets are compiled
+node_js:
+  - "stable"
+
 before_install:
   - "git submodule update --init --recursive"
+  # Install Ruby
   - sudo apt-get update -qq
   - sudo apt-get install -qq ruby-full
 
 before_script:
   - "composer install --prefer-dist"
+  # Install all Ruby dependencies
+  - gem install bundler
+  - bundle install
+  # Install grunt
+  - npm install grunt-cli -g
+  # TODO: compile all assets
+  # - grunt build
 
 script:
   # Standard build script
@@ -21,11 +33,12 @@ script:
   # HHVM script (phing not currently supported on hhvm pending http://www.phing.info/trac/ticket/1086)
   - if [[ $TRAVIS_PHP_VERSION == "hhvm" ]] ; then ./vendor/bin/phpunit --bootstrap=modules/unittest/bootstrap_all_modules.php modules/unittest/tests.php ; fi
 
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#kohana"
-    template:
-      - "%{repository}/%{branch} (%{commit}) - %{author}: %{message}"
-      - "Build details: %{build_url}"
-  email: false
+# No notifications for now
+# notifications:
+#   irc:
+#     channels:
+#       - "irc.freenode.org#kohana"
+#     template:
+#       - "%{repository}/%{branch} (%{commit}) - %{author}: %{message}"
+#       - "Build details: %{build_url}"
+#   email: false
